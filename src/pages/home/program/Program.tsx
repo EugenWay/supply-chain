@@ -2,7 +2,14 @@ import { Hex } from 'types';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { ACTIONS, USER } from 'consts';
-import { getAction, getForm, getItemData, getLabel, getName, getFilteredItems } from 'utils';
+import {
+  getAction,
+  getForm,
+  getItemData,
+  getLabel,
+  getName,
+  getFilteredItems,
+} from 'utils';
 import { useItem, useItems, useNft, useRoles, useSubmit } from 'hooks';
 import { Loader } from 'components';
 import { Header } from './header';
@@ -57,13 +64,19 @@ function Program({ id, onBackButtonClick }: Props) {
             </div>
             <div className={styles.main}>
               <List list={rolesList} value={role} onChange={setRole} />
-              {role && <List list={actionsList} value={action} onChange={setAction} />}
+              {role && (
+                <List list={actionsList} value={action} onChange={setAction} />
+              )}
               <div className={styles.action}>
                 {action ? (
                   <>
                     {itemId &&
                       (isItemReady ? (
-                        <Item id={itemId} data={getItemData(item, nft)} onBackClick={resetItem} />
+                        <Item
+                          id={itemId}
+                          data={getItemData(item, nft)}
+                          onBackClick={resetItem}
+                        />
                       ) : (
                         <Loader />
                       ))}

@@ -1,4 +1,8 @@
-import { useAccount, useSendMessage, useReadFullState } from '@gear-js/react-hooks';
+import {
+  useAccount,
+  useSendMessage,
+  useReadFullState,
+} from '@gear-js/react-hooks';
 import { useMemo } from 'react';
 import { LOCAL_STORAGE } from 'consts';
 import { Item, Items, Token, Hex } from 'types';
@@ -13,10 +17,20 @@ type ItemsState = { ExistingItems: Items };
 type RolesState = { Roles: string[] };
 type NFTState = { token: Token };
 
-
 function useSupplyChainState<T>(functionName: string, payload?: any) {
   const { buffer } = useWasmMetadata(stateMetaWasm);
-  return useReadWasmState<T>(localStorage[LOCAL_STORAGE.PROGRAM], buffer, functionName, payload);
+
+  // console.log(localStorage[LOCAL_STORAGE.PROGRAM]);
+  // console.log(buffer);
+  // console.log(functionName);
+  // console.log(payload);
+
+  return useReadWasmState<T>(
+    localStorage[LOCAL_STORAGE.PROGRAM],
+    buffer,
+    functionName,
+    payload
+  );
 }
 
 // function useSupplyChainFullState<T>() {
@@ -33,7 +47,11 @@ function useNFTnMetadata() {
 }
 
 function useItem(itemId: string) {
-  const { state, isStateRead } = useSupplyChainState<ItemState>('item_info', itemId);
+  const { state, isStateRead } = useSupplyChainState<ItemState>(
+    'item_info',
+    itemId
+  );
+
   return { item: state?.ItemInfo, isItemRead: isStateRead };
 }
 
@@ -47,8 +65,16 @@ function useRoles() {
   const { account } = useAccount();
   const address = account?.decodedAddress;
 
-  const payload = useMemo(() => (address ? { Roles: address } : undefined), [address]);
-  const { state, isStateRead } = useSupplyChainState<RolesState>(payload);
+  const payload = useMemo(
+    () => (address ? { Roles: address } : undefined),
+    [address]
+  );
+  const { state, isStateRead } = useSupplyChainState<RolesState>(
+    'roles',
+    payload
+  );
+
+  console.log(state);
 
   return { roles: state?.Roles, isEachRoleRead: isStateRead };
 }
@@ -58,7 +84,6 @@ function useNftProgramId() {
   const { state } = useSupplyChainState<Hex>('non_fungible_token');
   return state;
 }
-
 
 function useNft() {
   const nftProgramId = useNftProgramId();

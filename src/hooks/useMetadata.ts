@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
-import { getProgramMetadata, getStateMetadata, ProgramMetadata, StateMetadata } from '@gear-js/api';
+import {
+  getProgramMetadata,
+  getStateMetadata,
+  ProgramMetadata,
+  StateMetadata,
+} from '@gear-js/api';
 import { Buffer } from 'buffer';
 import { useAlert } from '@gear-js/react-hooks';
-
 
 export const useMetadata = (source: RequestInfo | URL) => {
   const [data, setData] = useState<ProgramMetadata>();
@@ -29,7 +33,8 @@ export const useWasmMetadata = (source: RequestInfo | URL) => {
         .then((buffer) => setData(buffer))
         .catch(({ message }: Error) => alert.error(`Fetch error: ${message}`));
     }
-  }, [source, alert]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [source]);
 
   return { buffer: data };
 };
